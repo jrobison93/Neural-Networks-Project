@@ -4,13 +4,46 @@
 """
 
 import math
+from random import random
 
-numInputs = 
-numHiddens = 
-numOutputs = 
+# The inputs are:
+#   friendliness in the range of -1 to 1
+#   shopOwner with the values of 0 and 1
+#   importance in the range of 0 to 1
+#   agressiveness in the range of 0 to 1
+#   playerInCombat with the values of 0 and 1
+numInputs = 5
+numHiddens = 3
 
-input_to_hidden = [][]
-hidden_to_output = [][]
+# The outputs are:
+#   attack
+#   trade
+#   ignore
+#   run
+#   giveQuest
+#   aidPlayer
+numOutputs = 6
+
+# friend, shop, importance, aggressive, inCombat,
+#  [attack, trade, ignore, run, quest, aid]
+training_set = [
+    [0.0, 0.0, 0.0, 0.0, 0.0, [0, 0, 1, 0, 0, 0]],
+    [1.0, 1.0, 0.0, 0.0, 0.0, [0, 1, 0, 0, 0, 0]],
+    [-1.0, 0.0, 0.0, 1.0, 0.0, [1, 0, 0, 0, 0, 0]],
+    [-1.0, 0.0, 1.0, 1.0, 0.0, [1, 0, 0, 0, 0, 0]],
+    [1.0, 0.0, 0.5, 0.5, 1.0, [0, 0, 0, 0, 0, 1]],
+    [1.0, 0.0, 1.0, 0.0, 0.0, [0, 0, 0, 0, 1, 0]],
+    [0.0, 0.0, 0.0, 0.0, 1.0, [0, 0, 0, 1, 0, 0]],
+    [0.0, 0.0, 0.5, 0.0, 0.0, [0, 0, 0, 0, 1, 0]],
+    [-1.0, 0.0, 0.0, 0.0, 1.0, [0, 0, 0, 1, 0, 0]],
+    [-1.0, 1.0, 0.0, 0.0, 1.0, [0, 0, 0, 1, 0, 0]]]
+
+output_strings = ["Attack", "Trade", "Ignore", "Run",
+                  "Give Quest", "Aid Player"]
+
+input_to_hidden = [[0.0 for x in range(numHiddens)] for y in range(numInputs)]
+hidden_to_output = [[0.0 for x in range(numOutputs)]
+                    for y in range(numHiddens)]
 
 inputs = []
 hidden = []
@@ -40,7 +73,7 @@ def assignRandomWeights():
 
 # Provides the output of the sigmoid function
 def sigmoid(value):
-    return 1.0 / (1.0 + math.exp(-val))
+    return 1.0 / (1.0 + math.exp(-value))
 
 
 # Provides the output of the derivative os the sigmoid function
@@ -49,13 +82,13 @@ def sigmoidDerivative(value):
 
 
 # Uses a feed forward method to determine the outputs of the network
-def feedForward:
+def feedForward():
     # Computes the output of the hidden layer
     for hidden in range(numHiddens):
         sum = 0.0
 
         for inp in range(numInputs):
-            sum += inputs[inp] * inputs_to_hidden[inp][hidden]
+            sum += inputs[inp] * input_to_hidden[inp][hidden]
 
         sum += input_to_hidden[numInputs][hidden]
 
@@ -74,7 +107,7 @@ def feedForward:
 
 
 # Uses back propagation to calculate the error of the network
-def backPropagate:
+def backPropagate():
     # Calculates the error of the output layer
     for output in range(numOutputs):
         output_error[output] = ((target[output] - actual[output]) *
