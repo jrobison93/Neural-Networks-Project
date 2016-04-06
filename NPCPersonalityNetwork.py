@@ -66,8 +66,9 @@ def randomWeight():
 # Randomly initializes the weights of the network
 def assignRandomWeights():
     for hidden in range(numHiddens):
-        for inp in range(numInputs):
+        for inp in range(numInputs + 1):
             input_to_hidden[inp][hidden] = randomWeight()
+    for hidden in range(numHiddens + 1):
         for output in range(numOutputs):
             hidden_to_output[hidden][output] = randomWeight()
 
@@ -157,13 +158,24 @@ def action():
 
     return index
 
-statistic_file = open("statistics.txt", "w")
+statistic_file = open("statistics.csv", "w")
+weights_file = open("weights.txt", "w")
 
 assignRandomWeights()
+weights_file.write("Initial Network\n")
+weights_file.write("---------------\n")
+for i in input_to_hidden:
+    weights_file.write(str(i) + " ")
+weights_file.write("\n")
+for i in hidden_to_output:
+    weights_file.write(str(i) + " ")
+weights_file.write("\n")
+
 
 sample = 0
 max_samples = len(training_sets) - 1
 
+# Trains the neural network with the training set
 for i in range(number_of_epochs + 1):
     inputs = training_sets[sample][0:5]
     target = training_sets[sample][5]
@@ -187,4 +199,16 @@ for i in range(number_of_epochs + 1):
     else:
         sample += 1
 
+
+weights_file.write("Final Network\n")
+weights_file.write("---------------\n")
+for i in input_to_hidden:
+    weights_file.write(str(i) + " ")
+weights_file.write("\n")
+for i in hidden_to_output:
+    weights_file.write(str(i) + " ")
+weights_file.write("\n")
+
+
 statistic_file.close()
+weights_file.close()
